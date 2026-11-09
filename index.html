@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Informix · Channel statistics</title>
+<link rel="stylesheet" href="style.css">
+<script src="app.js" defer></script>
+<main>
+  <header><p class="eyebrow">INFORMIX / LIBERA.CHAT</p><h1>Channel statistics</h1><p id="updated">Loading the latest snapshot…</p></header>
+  <nav id="channels" aria-label="Channels"></nav>
+  <section class="summary" aria-label="Channel totals" id="summary"></section>
+  <section class="leaderboard">
+    <div class="tools"><h2 id="heading">Leaderboard</h2><label>Find a nick <input id="search" type="search" placeholder="Search nicknames"></label><label>Rank by <select id="sort"><option value="words">Words</option><option value="lines">Lines</option><option value="letters">Letters</option><option value="smileys">Smileys</option><option value="minutes">Time in channel</option></select></label></div>
+    <div class="scroll"><table><thead><tr><th scope="col">#</th><th scope="col">Nickname</th><th scope="col">Words</th><th scope="col">Lines</th><th scope="col">Letters</th><th scope="col">Smileys</th><th scope="col">Hours</th></tr></thead><tbody id="rows"></tbody></table></div>
+    <p id="empty" hidden>No matching statistics yet.</p>
+  </section>
+  <footer>Collected by stats.mod · Snapshots refresh about every five minutes.<br>Historical word, line, letter and smiley totals were imported; channel time is counted from the migration onward.</footer>
+</main>
+</html>
