@@ -1,19 +1,38 @@
 <!doctype html>
 <html lang="en">
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Informix · Channel statistics</title>
-<link rel="stylesheet" href="style.css">
-<script src="app.js" defer></script>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#10141c">
+  <meta name="description" content="Channel activity and contributor rankings collected by Informix on Libera.Chat.">
+  <title>Informix · Channel statistics</title>
+  <link rel="stylesheet" href="style.css?v=2">
+  <script src="app.js?v=2" defer></script>
+</head>
+<body>
 <main>
-  <header><p class="eyebrow">INFORMIX / LIBERA.CHAT</p><h1>Channel statistics</h1><p id="updated">Loading the latest snapshot…</p></header>
-  <nav id="channels" aria-label="Channels"></nav>
-  <section class="summary" aria-label="Channel totals" id="summary"></section>
-  <section class="leaderboard">
-    <div class="tools"><h2 id="heading">Leaderboard</h2><label>Find a nick <input id="search" type="search" placeholder="Search nicknames"></label><label>Rank by <select id="sort"><option value="words">Words</option><option value="lines">Lines</option><option value="letters">Letters</option><option value="smileys">Smileys</option><option value="minutes">Time in channel</option></select></label></div>
-    <div class="scroll"><table><thead><tr><th scope="col">#</th><th scope="col">Nickname</th><th scope="col">Words</th><th scope="col">Lines</th><th scope="col">Letters</th><th scope="col">Smileys</th><th scope="col">Hours</th></tr></thead><tbody id="rows"></tbody></table></div>
-    <p id="empty" hidden>No matching statistics yet.</p>
-  </section>
-  <footer>Collected by stats.mod · Snapshots refresh about every five minutes.<br>Historical word, line, letter and smiley totals were imported; channel time is counted from the migration onward.</footer>
+  <header>
+    <div class="masthead"><a class="brand" href="./" aria-label="Informix home"><span class="brand-mark" aria-hidden="true">i.</span> INFORMIX</a><span class="network">Libera.Chat</span></div>
+    <div class="hero">
+      <div><p class="eyebrow">CHANNEL STATISTICS</p><h1 id="channel-title">The conversation, counted.</h1><p class="subtitle">The people and conversations that make a channel.</p></div>
+      <div class="sharing"><button id="share" type="button" disabled><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-2 2M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l2-2"/></svg>Copy channel link</button><span id="share-status" role="status"></span></div>
+    </div>
+    <div class="channel-bar"><nav id="channels" aria-label="Channels"></nav><span class="freshness"><span aria-hidden="true"></span><time id="updated">Loading snapshot…</time></span></div>
+  </header>
+  <div id="content">
+    <section class="summary" aria-label="Channel totals" id="summary"></section>
+    <section class="leaderboard" aria-labelledby="heading">
+      <div class="tools">
+        <div class="table-heading"><h2 id="heading">Leaderboard</h2><p id="results" role="status"></p></div>
+        <label class="search-label"><span>Find a nick</span><input id="search" type="search" placeholder="Search nicknames" autocomplete="off"></label>
+        <label><span>Rank by</span><select id="sort"><option value="words">Words</option><option value="lines">Lines</option><option value="letters">Letters</option><option value="smileys">Smileys</option><option value="minutes">Time in channel</option></select></label>
+      </div>
+      <div class="scroll" tabindex="0" role="region" aria-label="Contributor rankings; scroll horizontally for all columns"><table><thead><tr><th scope="col">Rank</th><th scope="col">Nickname</th><th scope="col" data-sort="words">Words</th><th scope="col" data-sort="lines">Lines</th><th scope="col" data-sort="letters">Letters</th><th scope="col" data-sort="smileys">Smileys</th><th scope="col" data-sort="minutes">Hours</th></tr></thead><tbody id="rows"></tbody></table></div>
+      <p id="empty" hidden>No matching statistics yet. Try a different nickname.</p>
+    </section>
+  </div>
+  <footer><span>Collected by <strong>stats.mod</strong> · Refreshed about every five minutes</span><details><summary>About these statistics</summary><p>Historical word, line, letter and smiley totals were imported. Channel time and other activity counters are counted from the migration onward. Snapshots can take a few minutes to reach the website.</p></details></footer>
+  <noscript><p>JavaScript is needed to display and filter the statistics.</p></noscript>
 </main>
+</body>
 </html>
