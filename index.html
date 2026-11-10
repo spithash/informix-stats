@@ -7,8 +7,8 @@
   <meta name="theme-color" content="#10141c">
   <meta name="description" content="Channel activity and contributor rankings collected by Informix on Libera.Chat.">
   <title>Informix · Channel statistics</title>
-  <link rel="stylesheet" href="style.css?v=3">
-  <script src="app.js?v=3" defer></script>
+  <link rel="stylesheet" href="style.css?v=4">
+  <script src="app.js?v=4" defer></script>
 </head>
 
 <body>
@@ -35,6 +35,27 @@
     </header>
     <div id="content">
       <section class="summary" aria-label="Channel totals" id="summary"></section>
+      <section class="charts" aria-label="Channel activity charts">
+        <article class="chart-card">
+          <div class="chart-heading">
+            <div><p class="chart-kicker">LEADERBOARD VIEW</p><h2 id="bar-title">Top contributors</h2></div>
+            <span id="bar-caption"></span>
+          </div>
+          <div class="bar-chart" id="bar-chart" role="img" aria-labelledby="bar-title bar-caption"></div>
+        </article>
+        <article class="chart-card share-card">
+          <div class="chart-heading">
+            <div><p class="chart-kicker">PARTICIPATION</p><h2 id="share-title">Share of words</h2></div>
+          </div>
+          <div class="share-layout">
+            <div class="donut" id="share-donut" role="img" aria-labelledby="share-title share-summary">
+              <div><strong id="share-percent">0%</strong><span>top 3 share</span></div>
+            </div>
+            <div class="share-legend" id="share-legend"></div>
+          </div>
+          <p class="sr-only" id="share-summary"></p>
+        </article>
+      </section>
       <section class="leaderboard" aria-labelledby="heading">
         <div class="tools">
           <div class="table-heading">

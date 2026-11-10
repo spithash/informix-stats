@@ -5,6 +5,48 @@ const formatter = new Intl.NumberFormat();
 const number = value => formatter.format(value);
 const labels = {words:'words',lines:'lines',letters:'letters',smileys:'smileys',minutes:'time in channel'};
 const channelHref = name => '#' + encodeURIComponent(name.slice(1));
+const chartValue = (value,metric) => metric === 'minutes' ? (value/60).toFixed(1)+' hr' : number(value);
+function renderCharts(channel,metric,ranked) {
+  const top = ranked.slice(0,7), maximum = top.length ? top[0][metric] : 0;
+  $('bar-caption').textContent = 'Ranked by '+labels[metric];
+  $('bar-chart').setAttribute('aria-label','Top contributors in '+channel.name+' ranked by '+labels[metric]);
+  $('bar-chart').replaceChildren(...top.map((user,index) => {
+    const row = document.createElement('div'); row.className = 'bar-row';
+    const rank = document.createElement('span'); rank.className = 'bar-rank'; rank.textContent = String(index+1).padStart(2,'0');
+    const nick = document.createElement('span'); nick.className = 'bar-nick'; nick.textContent = user.nick;
+    const track = document.createElement('span'); track.className = 'bar-track';
+    const fill = document.createElement('span'); fill.className = 'bar-fill';
+    fill.style.width = (maximum ? user[metric]/maximum*100 : 0)+'%'; track.append(fill);
+    const value = document.createElement('strong'); value.className = 'bar-value'; value.textContent = chartValue(user[metric],metric);
+    row.append(rank,nick,track,value); return row;
+  }));
+  if (!top.length) {
+    const empty = document.createElement('p'); empty.className = 'chart-empty'; empty.textContent = 'Not enough activity to chart yet.';
+    $('bar-chart').replaceChildren(empty);
+  }
+
+  const colors = ['#8be2c1','#75a9f9','#c494f4','#344156'];
+  const leaders = [...channel.users].sort((a,b) => b.words-a.words || a.nick.localeCompare(b.nick)).slice(0,3);
+  const total = channel.totals.words || 0, leading = leaders.reduce((sum,user) => sum+user.words,0);
+  const segments = leaders.map(user => ({label:user.nick,value:user.words}));
+  if (total-leading > 0) segments.push({label:'Everyone else',value:total-leading});
+  let cursor = 0;
+  const stops = segments.map((segment,index) => {
+    const start = cursor; cursor += total ? segment.value/total*360 : 0;
+    return `${colors[index]} ${start}deg ${cursor}deg`;
+  });
+  $('share-donut').style.background = total ? `conic-gradient(${stops.join(',')})` : '#273246';
+  const percent = total ? Math.round(leading/total*100) : 0;
+  $('share-percent').textContent = percent+'%';
+  $('share-summary').textContent = `The top three contributors account for ${percent}% of words in ${channel.name}.`;
+  $('share-legend').replaceChildren(...segments.map((segment,index) => {
+    const item = document.createElement('div'); item.className = 'legend-item';
+    const dot = document.createElement('span'); dot.className = 'legend-dot'; dot.style.background = colors[index];
+    const label = document.createElement('span'); label.textContent = segment.label;
+    const share = document.createElement('strong'); share.textContent = (total ? Math.round(segment.value/total*100) : 0)+'%';
+    item.append(dot,label,share); return item;
+  }));
+}
 function selectFromUrl() {
   if (!snapshot || !snapshot.channels.length) return;
   let slug;
@@ -39,6 +81,7 @@ function render() {
   }));
   const sort = $('sort').value, search = $('search').value.trim().toLowerCase();
   const ranked = [...channel.users].sort((a,b) => b[sort]-a[sort] || a.nick.localeCompare(b.nick));
+  renderCharts(channel,sort,ranked);
   const maximum = ranked.length ? ranked[0][sort] : 0, rows = [];
   ranked.forEach((user,index) => {
     if (!user.nick.toLowerCase().includes(search)) return;
