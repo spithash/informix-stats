@@ -19,6 +19,8 @@ function render() {
   if (!channel) return;
   document.title = channel.name + ' · Informix statistics';
   $('channel-title').textContent = channel.name;
+  $('channel-topic').textContent = channel.topic || '';
+  $('channel-topic').hidden = !channel.topic;
   $('channels').querySelectorAll('a').forEach((link,index) => {
     if (selected === index) link.setAttribute('aria-current','page');
     else link.removeAttribute('aria-current');

@@ -7,8 +7,8 @@
   <meta name="theme-color" content="#10141c">
   <meta name="description" content="Channel activity and contributor rankings collected by Informix on Libera.Chat.">
   <title>Informix · Channel statistics</title>
-  <link rel="stylesheet" href="style.css?v=2">
-  <script src="app.js?v=2" defer></script>
+  <link rel="stylesheet" href="style.css?v=3">
+  <script src="app.js?v=3" defer></script>
 </head>
 
 <body>
@@ -20,6 +20,7 @@
         <div>
           <p class="eyebrow">CHANNEL STATISTICS</p>
           <h1 id="channel-title">The conversation, counted.</h1>
+          <p class="channel-topic" id="channel-topic" hidden></p>
           <p class="subtitle">No logs are stored or retained, and all statistics are collected anonymously.</p>
         </div>
         <div class="sharing"><button id="share" type="button" disabled><svg aria-hidden="true" viewBox="0 0 24 24"
@@ -70,12 +71,9 @@
         <p id="empty" hidden>No matching statistics yet. Try a different nickname.</p>
       </section>
     </div>
-    <footer><span>Collected by <strong>stats.mod</strong> · Refreshed about every five minutes</span>
-      <details>
-        <summary>About these statistics</summary>
-        <p>Historical word, line, letter and smiley totals were imported. Channel time and other activity counters are
-          counted from the migration onward. Snapshots can take a few minutes to reach the website.</p>
-      </details>
+    <footer><span>Collected by <strong>stats.mod</strong> · Refreshed about every five minutes ·
+        <a href="https://github.com/spithash/informix-stats">View the page source on GitHub</a></span>
+      <span class="opt-out">Want to be excluded from the public statistics? Contact the bot owner on IRC to opt out.</span>
     </footer>
     <noscript>
       <p>JavaScript is needed to display and filter the statistics.</p>
