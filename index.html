@@ -7,8 +7,8 @@
   <meta name="theme-color" content="#10141c">
   <meta name="description" content="Channel activity and contributor rankings collected by Informix on Libera.Chat.">
   <title>Informix · Channel statistics</title>
-  <link rel="stylesheet" href="style.css?v=4">
-  <script src="app.js?v=4" defer></script>
+  <link rel="stylesheet" href="style.css?v=5">
+  <script src="app.js?v=5" defer></script>
 </head>
 
 <body>
@@ -55,6 +55,20 @@
           </div>
           <p class="sr-only" id="share-summary"></p>
         </article>
+      </section>
+      <section class="chart-card calendar-card" aria-labelledby="calendar-title">
+        <div class="chart-heading">
+          <div><p class="chart-kicker">DAILY ACTIVITY</p><h2 id="calendar-title">365-day word activity</h2></div>
+          <span id="calendar-caption">Collection begins today</span>
+        </div>
+        <div class="heatmap-scroll" tabindex="0" role="region" aria-label="Scrollable daily word activity heatmap">
+          <div class="weekday-labels" aria-hidden="true"><span>Mon</span><span></span><span>Wed</span><span></span><span>Fri</span><span></span><span>Sun</span></div>
+          <div class="heatmap" id="heatmap" role="grid" aria-label="Daily word totals for the last 365 days"></div>
+        </div>
+        <div class="heatmap-footer"><span>Each square is one UTC day. Missing days were not collected.</span>
+          <span class="heat-legend" aria-hidden="true">Less <i class="level-0"></i><i class="level-1"></i><i class="level-2"></i><i class="level-3"></i><i class="level-4"></i> More</span>
+        </div>
+        <div class="heat-tooltip" id="heat-tooltip" role="status" hidden></div>
       </section>
       <section class="leaderboard" aria-labelledby="heading">
         <div class="tools">

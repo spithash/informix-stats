@@ -47,6 +47,53 @@ function renderCharts(channel,metric,ranked) {
     item.append(dot,label,share); return item;
   }));
 }
+function renderHeatmap(channel) {
+  const grid = $('heatmap'), tooltip = $('heat-tooltip');
+  const history = new Map((channel.history || []).map(day => [day.date,day.words]));
+  const end = new Date(snapshot.updated); end.setUTCHours(0,0,0,0);
+  const start = new Date(end); start.setUTCDate(start.getUTCDate()-364);
+  const offset = (start.getUTCDay()+6)%7;
+  const known = [...history.values()], maximum = known.length ? Math.max(...known) : 0;
+  const cells = [];
+  for (let i=0;i<offset;i++) {
+    const filler = document.createElement('span'); filler.className = 'heat-cell filler'; filler.setAttribute('aria-hidden','true'); cells.push(filler);
+  }
+  const activeCells = [];
+  for (let i=0;i<365;i++) {
+    const date = new Date(start); date.setUTCDate(start.getUTCDate()+i);
+    const key = date.toISOString().slice(0,10), words = history.get(key);
+    const cell = document.createElement('button'); cell.type = 'button'; cell.className = 'heat-cell';
+    const formatted = date.toLocaleDateString(undefined,{timeZone:'UTC',year:'numeric',month:'short',day:'numeric'});
+    let description;
+    if (words === undefined) { cell.classList.add('unknown'); description = `${formatted}: no collected data`; }
+    else {
+      const level = words === 0 || !maximum ? 0 : Math.max(1,Math.ceil(Math.log1p(words)/Math.log1p(maximum)*4));
+      cell.classList.add('level-'+level); description = `${formatted}: ${number(words)} word${words===1?'':'s'}`;
+    }
+    cell.dataset.tooltip = description; cell.setAttribute('aria-label',description); cell.tabIndex = i===364 ? 0 : -1;
+    const show = event => {
+      tooltip.textContent = description; tooltip.hidden = false;
+      const box = cell.getBoundingClientRect(), x = event.clientX || box.left+box.width/2, y = event.clientY || box.top;
+      tooltip.style.left = Math.min(x+12,window.innerWidth-220)+'px'; tooltip.style.top = Math.max(8,y-42)+'px';
+    };
+    cell.addEventListener('pointerenter',show); cell.addEventListener('pointermove',show);
+    cell.addEventListener('pointerleave',() => { tooltip.hidden = true; });
+    cell.addEventListener('focus',show); cell.addEventListener('blur',() => { tooltip.hidden = true; });
+    cells.push(cell); activeCells.push(cell);
+  }
+  grid.replaceChildren(...cells);
+  grid.onkeydown = event => {
+    const current = activeCells.indexOf(document.activeElement); if (current < 0) return;
+    const movement = {ArrowUp:-1,ArrowDown:1,ArrowLeft:-7,ArrowRight:7}[event.key];
+    if (!movement) return; event.preventDefault();
+    const next = Math.max(0,Math.min(364,current+movement));
+    activeCells[current].tabIndex=-1; activeCells[next].tabIndex=0; activeCells[next].focus();
+  };
+  const dates = [...history.keys()].sort();
+  $('calendar-caption').textContent = dates.length
+    ? `${dates.length} day${dates.length===1?'':'s'} collected · since ${new Date(dates[0]+'T00:00:00Z').toLocaleDateString(undefined,{timeZone:'UTC',month:'short',day:'numeric',year:'numeric'})}`
+    : 'Collection begins today';
+}
 function selectFromUrl() {
   if (!snapshot || !snapshot.channels.length) return;
   let slug;
@@ -82,6 +129,7 @@ function render() {
   const sort = $('sort').value, search = $('search').value.trim().toLowerCase();
   const ranked = [...channel.users].sort((a,b) => b[sort]-a[sort] || a.nick.localeCompare(b.nick));
   renderCharts(channel,sort,ranked);
+  renderHeatmap(channel);
   const maximum = ranked.length ? ranked[0][sort] : 0, rows = [];
   ranked.forEach((user,index) => {
     if (!user.nick.toLowerCase().includes(search)) return;
